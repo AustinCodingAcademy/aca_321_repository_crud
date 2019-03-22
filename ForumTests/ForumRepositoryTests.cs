@@ -34,6 +34,33 @@ namespace ForumTests
         }
 
         [Fact]
+        [Trait("Domain", "Create")]
+        public void Create_MultipleCreates_GenerateAllUniqueIds()
+        {
+            // Assemble
+            var repo = new ForumRepository();
+            var post1 = new ForumPost
+            {
+                Date = DateTime.Now,
+                User = "Test User1",
+                Message = "This post should be returned at the bottom."
+            };
+            var post2 = new ForumPost
+            {
+                Date = DateTime.Now,
+                User = "Test User1",
+                Message = "This post should be returned at the bottom."
+            };
+
+            // Act
+            var savedPost1 = repo.Create(post1);
+            var savedPost2 = repo.Create(post2);
+
+            // Assert
+            Assert.Equal(2, new[] { savedPost1.Id, savedPost2.Id }.Distinct().Count());
+        }
+
+        [Fact]
         [Trait("Domain", "Save")]
         public void Save_ShouldPersistNewRecordNotGenerateANewRecord_WhenIdIsNotNull()
         {
